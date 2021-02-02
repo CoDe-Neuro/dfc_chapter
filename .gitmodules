@@ -1,0 +1,3 @@
+[submodule "dynfc"]
+	path = dynfc
+	url = https://github.com/CoDe-Neuro/dynfc
