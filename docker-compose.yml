@@ -10,6 +10,7 @@ services:
     volumes:
           - "./src:/src"
           - "./dynfc/dynfc:/src/dynfc" 
+          - "./data:/src/data"
           - "./data:/data"
           - "./jupyter:/jupyter"
     environment:
