@@ -2,6 +2,9 @@
 
 [![CC BY 4.0][cc-by-shield]][cc-by]
 
+
+![Alt text](src/slide_windows.png?raw=true "Title")
+
 ## License
 
 This work is licensed under a
