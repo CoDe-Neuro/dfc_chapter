@@ -2,6 +2,7 @@
 
 [![CC BY 4.0][cc-by-shield]][cc-by]
 
+![Alt text](src/states.png?raw=true "Title")
 
 ![Alt text](src/slide_windows.png?raw=true "Title")
 
