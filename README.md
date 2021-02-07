@@ -8,6 +8,8 @@
 
 ![Alt text](src/phase_series.png?raw=true "Title")
 
+![Alt text](src/cofluct.png?raw=true "Title")
+
 ## License
 
 This work is licensed under a
