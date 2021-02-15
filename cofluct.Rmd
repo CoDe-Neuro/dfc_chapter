@@ -1,0 +1,64 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Cofluctuations
+
+```{python echo=TRUE}
+import sys
+sys.path.insert(1, 'libs/')
+
+import numpy as np
+import scipy as sc
+from scipy import io
+import dynfc as dyn
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+ts = sc.io.loadmat('data/ts.mat')['ts']
+ts = ts.transpose()
+
+mat1, rss = dyn.corr_slide(ts,24)
+mat1 = mat1[:,:,0]
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(mat1, 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = True)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+plt.show()
+
+upt = np.triu_indices(mat1.shape[0], k = 1)
+vec = (mat1[upt])
+
+toPlot = np.zeros((vec.shape[0],1))
+toPlot[:,0] = vec
+
+aa = plt.figure(figsize = (12/50,4))
+ax = sns.heatmap(toPlot[:,0:1], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = False)
+ax.axis('off')
+plt.show()
+
+edges_series, corr_mats, rss = dyn.cofluct(ts, 24)
+
+aa = plt.figure(figsize = (12,4))
+ax = sns.heatmap(edges_series, 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = False)
+ax.axis('off')
+plt.show()
+```

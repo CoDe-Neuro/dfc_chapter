@@ -1,0 +1,49 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{python echo=TRUE}
+import sys
+sys.path.insert(1, 'libs/')
+
+import numpy as np
+import scipy as sc
+from scipy import io
+import dynfc as dyn
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+ts = sc.io.loadmat('data/ts.mat')['ts']
+ts = ts
+
+RSsig = np.zeros((ts.shape[0],ts.shape[1],1))
+RSsig[:,:,0] = ts
+
+Phases, syncConn, leidaArray = dyn.run_multiPat(RSsig)
+
+mat1 = syncConn[:,:,0,0]
+
+aa = plt.figure(figsize = [7,6])
+ax = sns.heatmap(mat1, 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = True)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+plt.show()
+
+aa = plt.figure(figsize = (12/50,4))
+ax = sns.heatmap(leidaArray[:,0,]/max(abs(leidaArray[:,0,])), 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = False)
+ax.axis('off')
+plt.show()
+```

@@ -1,0 +1,127 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# Sliding windows
+
+```{python echo=TRUE}
+import sys
+sys.path.insert(1, 'libs/')
+
+import dynfc as dyn
+import numpy as np
+from numpy.random import seed, rand
+import scipy as sc
+from scipy import io
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.cbook as cbook
+import matplotlib.cm as cm
+import matplotlib.patches as patches
+
+font = {'weight' : 'regular',
+        'size'   : 24}
+plt.rc('font', **font)
+
+ts = sc.io.loadmat('data/ts.mat')['ts']
+ts = ts.transpose()
+
+corr_mats, idx = dyn.corr_slide(ts,300,50)
+
+idx.shape
+
+a = [1,1,1,1,1.6]
+
+fig,ax = plt.subplots(1)
+fig.set_figheight(10)
+fig.set_figwidth(20)
+plt.style.use('tableau-colorblind10')
+for i in range(5):
+    
+    plt.plot(2*i*a[i] + ts[i,]/1.4)   
+    
+plt.xlabel('Time [TRs]')
+plt.ylabel('BOLD')
+ax.tick_params(left=False)
+ax.set_yticklabels([])
+ax.set_ylim(-3,15.4)
+ax.set_xlim(0,1200)
+rect = patches.Rectangle((idx[0],-2.8),300,18,linewidth=4,edgecolor='#595959',facecolor='none')
+ax.add_patch(rect)
+rect = patches.Rectangle((idx[5],-2.8),300,18,linewidth=4,edgecolor='#A56B6B',facecolor='none')
+ax.add_patch(rect)
+rect = patches.Rectangle((idx[9],-2.8),300,18,linewidth=4,edgecolor='#CE3E3E',facecolor='none')
+ax.add_patch(rect)
+rect = patches.Rectangle((idx[16],-2.8),300,18,linewidth=4,edgecolor='#FF0000',facecolor='none')
+ax.add_patch(rect)
+plt.show()
+```
+
+
+```{python echo=FALSE}
+import sys
+sys.path.insert(1, 'libs/')
+
+import dynfc as dyn
+import numpy as np
+from numpy.random import seed, rand
+import scipy as sc
+from scipy import io
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.cbook as cbook
+import matplotlib.cm as cm
+import matplotlib.patches as patches
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,0], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,5], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,9], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,16], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+```
