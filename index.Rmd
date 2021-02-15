@@ -1,0 +1,408 @@
+---
+title: '**Results Template**'
+subtitle: A Subtitle
+output:
+  html_document:
+    theme: cerulean
+    highlight: pygments
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    number_sections: no
+    df_print: kable
+    code_folding: hide
+    code_download: yes
+  word_document:
+    reference_docx: utils/Template_Word.docx
+    highlight: pygments
+    toc: no
+    toc_depth: 3
+    df_print: kable
+    number_sections: yes
+  rmarkdown::html_vignette:
+    toc: yes
+    toc_depth: 3
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+    latex_engine: xelatex
+editor_options:
+  chunk_output_type: inline
+bibliography: utils/bibliography.bib
+csl: utils/apa.csl
+---
+
+
+<!-- 
+!!!! IMPORTANT: run `source("utils/render.R")` to publish instead of clicking on 'Knit'
+-->
+
+## Packages
+
+
+
+```{r setup, warning=FALSE, message=TRUE, include=FALSE}
+source("utils/config.R")  
+
+fast <- FALSE  # Make this false to skip the chunks
+```
+
+
+
+# Introduction
+
+```{r badges, echo=FALSE, message=TRUE, warning=FALSE, results='asis'}
+# This chunk is a bit complex so don't worry about it: it's made to add badges to the HTML versions
+# NOTE: You have to replace the links accordingly to have working "buttons" on the HTML versions
+if (!knitr::is_latex_output() && knitr::is_html_output()) {
+  cat("![Build](https://github.com/RealityBending/TemplateResults/workflows/Build/badge.svg)
+      [![Website](https://img.shields.io/badge/repo-Readme-2196F3)](https://github.com/RealityBending/TemplateResults)
+      [![Website](https://img.shields.io/badge/visit-website-E91E63)](https://realitybending.github.io/TemplateResults/)
+      [![Website](https://img.shields.io/badge/download-.docx-FF5722)](https://github.com/RealityBending/TemplateResults/raw/main/word_and_pdf/SupplementaryMaterials.docx)
+      [![Website](https://img.shields.io/badge/see-.pdf-FF9800)](https://github.com/RealityBending/TemplateResults/blob/main/word_and_pdf/SupplementaryMaterials.pdf)")
+}
+```
+
+
+# Sliding windows
+
+```{python}
+import sys
+sys.path.insert(1, 'libs/')
+
+import dynfc as dyn
+import numpy as np
+from numpy.random import seed, rand
+import scipy as sc
+from scipy import io
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.cbook as cbook
+import matplotlib.cm as cm
+import matplotlib.patches as patches
+
+font = {'weight' : 'regular',
+        'size'   : 24}
+plt.rc('font', **font)
+
+ts = sc.io.loadmat('data/ts.mat')['ts']
+ts = ts.transpose()
+
+corr_mats, idx = dyn.corr_slide(ts,300,50)
+
+idx.shape
+
+a = [1,1,1,1,1.6]
+
+fig,ax = plt.subplots(1)
+fig.set_figheight(10)
+fig.set_figwidth(20)
+plt.style.use('tableau-colorblind10')
+for i in range(5):
+    
+    plt.plot(2*i*a[i] + ts[i,]/1.4)   
+    
+plt.xlabel('Time [TRs]')
+plt.ylabel('BOLD')
+ax.tick_params(left=False)
+ax.set_yticklabels([])
+ax.set_ylim(-3,15.4)
+ax.set_xlim(0,1200)
+rect = patches.Rectangle((idx[0],-2.8),300,18,linewidth=4,edgecolor='#595959',facecolor='none')
+ax.add_patch(rect)
+rect = patches.Rectangle((idx[5],-2.8),300,18,linewidth=4,edgecolor='#A56B6B',facecolor='none')
+ax.add_patch(rect)
+rect = patches.Rectangle((idx[9],-2.8),300,18,linewidth=4,edgecolor='#CE3E3E',facecolor='none')
+ax.add_patch(rect)
+rect = patches.Rectangle((idx[16],-2.8),300,18,linewidth=4,edgecolor='#FF0000',facecolor='none')
+ax.add_patch(rect)
+plt.show()
+```
+
+```{python}
+import sys
+sys.path.insert(1, 'libs/')
+
+import dynfc as dyn
+import numpy as np
+from numpy.random import seed, rand
+import scipy as sc
+from scipy import io
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib.cbook as cbook
+import matplotlib.cm as cm
+import matplotlib.patches as patches
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,0], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,5], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,9], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(corr_mats[:,:,16], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = False)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+    
+plt.show()
+
+```
+
+# Cofluctuations
+
+```{python}
+import sys
+sys.path.insert(1, 'libs/')
+
+import numpy as np
+import scipy as sc
+from scipy import io
+import dynfc as dyn
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+ts = sc.io.loadmat('data/ts.mat')['ts']
+ts = ts.transpose()
+
+mat1, rss = dyn.corr_slide(ts,24)
+mat1 = mat1[:,:,0]
+
+aa = plt.figure(figsize = [6,6])
+ax = sns.heatmap(mat1, 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = True)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+plt.show()
+
+upt = np.triu_indices(mat1.shape[0], k = 1)
+vec = (mat1[upt])
+
+toPlot = np.zeros((vec.shape[0],1))
+toPlot[:,0] = vec
+
+aa = plt.figure(figsize = (12/50,4))
+ax = sns.heatmap(toPlot[:,0:1], 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = False)
+ax.axis('off')
+plt.show()
+
+edges_series, corr_mats, rss = dyn.cofluct(ts, 24)
+
+aa = plt.figure(figsize = (12,4))
+ax = sns.heatmap(edges_series, 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = False)
+ax.axis('off')
+plt.show()
+```
+
+#Phase difference
+
+```{python}
+import sys
+sys.path.insert(1, 'libs/')
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from mpl_toolkits.mplot3d import Axes3D
+
+theta = np.linspace(0*np.pi, 8*np.pi, 100)
+time = np.linspace(0, 8, 100)
+y1 = np.sin(theta)
+x1 = np.cos(theta)
+y2 = np.sin(theta + np.pi/2)
+x2 = np.cos(theta + np.pi/2)
+r = time/np.max(time)
+ones = np.ones(time.shape[0])
+
+fig = plt.figure()
+ax = fig.add_subplot(projection='3d')
+plt.style.use('classic')
+
+ax.plot(time, x1, y1, color = '#67001f', linewidth=2)
+ax.plot(time,ones,y1, linestyle = '--', color = '#0f0f0f')
+ax.plot(time,x1,-ones, linestyle = '--', color = '#0f0f0f')
+ax.quiver(time,0,0,0, 0.99*x1, 0.99*y1, 
+          length = 0.9, 
+          normalize = False, 
+          arrow_length_ratio = 0.1, 
+          alpha = 0.4, 
+          color = '#053061')
+ax.text(0.5, 1, 0.5, r'$\sin(\theta)$', fontsize = 20)
+ax.text(0.5, -1, -1, r'$\cos(\theta)$', fontsize = 20)
+ax.set_xlabel('Time')
+ax.set_ylabel('Re')
+ax.set_zlabel('Im')
+ax.set_xlim(0,8)
+ax.set_ylim(-1,1)
+ax.set_zlim(-1,1)
+plt.show()
+
+colors1 = plt.cm.Reds(np.arange(0,1,0.01))
+colors1[:,-1] = np.arange(0,1,0.01)
+
+colors2 = plt.cm.Blues(np.arange(0,1,0.01))
+colors2[:,-1] = np.arange(0,1,0.01)
+
+fig = plt.figure(figsize = (12,8))
+ax = fig.add_subplot(projection='3d')
+plt.style.use('classic')
+
+ax.scatter(time,ones,r*y1, color = colors1, marker = ",", s = 3)
+ax.scatter(time,r*x1,-ones, color = colors1, marker = ",", s = 3)
+ax.scatter(time,ones,r*y2, color = colors2, marker = ",", s = 3)
+ax.scatter(time,r*x2,-ones, color = colors2, marker = ",", s = 3)
+#ax.plot(time,r*x2,-ones, linestyle = '--', color = colors2[-10,:])
+ax.quiver(time,0,0,0, 0.99*r*x1, 0.99*r*y1, 
+          length = 0.9, 
+          normalize = False, 
+          arrow_length_ratio = 0.1, 
+          alpha = 1, 
+          color = colors1)
+ax.quiver(time,0,0,0, 0.99*r*x2, 0.99*r*y2, 
+          length = 0.9, 
+          normalize = False, 
+          arrow_length_ratio = 0.1, 
+          alpha = 1, 
+          color = colors2)
+ax.text(0.5, 1, 0.4, r'$A(t)$ $\sin(\theta)$', fontsize = 20)
+ax.text(0.5, -0.9, -1, r'$A(t)$ $\cos(\theta)$', fontsize = 20)
+ax.set_xlabel('Time')
+ax.set_ylabel('Re')
+ax.set_zlabel('Im')
+ax.set_xlim(0,8)
+ax.set_ylim(-1,1)
+ax.set_zlim(-1,1)
+plt.show()
+
+x1_vec = x1
+x1_vec = x1_vec[99]
+y1_vec = y1
+y1_vec = y1_vec[99]
+
+x2_vec = x2
+x2_vec = x2_vec[99]
+y2_vec = y2
+y2_vec = y2_vec[99]
+
+x, y = 0.0, 0.0
+
+fig,ax = plt.subplots(1)
+fig.set_figheight(6)
+fig.set_figwidth(7)
+ax.scatter(r*x1,r*y1, color = colors1, marker = ".", s = 100)
+ax.scatter(r*x2,r*y2, color = colors2, marker = ".", s = 100)
+ax.arrow(0,0,x1_vec,y1_vec, width = 0.015, color = colors1[-1,:], head_width = 0.1)
+ax.arrow(0,0,x2_vec,y2_vec, width = 0.015, color = colors2[-1,:], head_width = 0.1)
+ax.add_patch(patches.Arc((x,y), 2.3, 2.3, theta1=0.0, theta2=90.0, linestyle = '--'))
+ax.text(0.7,1, r'$\mathcal{\Delta\varphi = \frac{\pi}{2}}$', fontsize = 24)
+ax.text(1.18*x1_vec,y1_vec, r'$\mathcal{\varphi}_{1}$', fontsize = 20)
+ax.text(x2_vec,1.22*y2_vec, r'$\mathcal{\varphi}_{2}$', fontsize = 20)
+ax.set_xlim(-1.35,1.35)
+ax.set_ylim(-1.35,1.35)
+ax.set_xlabel('Re')
+ax.set_ylabel('Im')
+plt.show()
+```
+
+```{python}
+import sys
+sys.path.insert(1, 'libs/')
+
+import numpy as np
+import scipy as sc
+from scipy import io
+import dynfc as dyn
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+ts = sc.io.loadmat('data/ts.mat')['ts']
+ts = ts
+
+RSsig = np.zeros((ts.shape[0],ts.shape[1],1))
+RSsig[:,:,0] = ts
+
+Phases, syncConn, leidaArray = dyn.run_multiPat(RSsig)
+
+mat1 = syncConn[:,:,0,0]
+
+aa = plt.figure(figsize = [7,6])
+ax = sns.heatmap(mat1, 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = True, 
+                 cbar = True)
+ax.axis('off')
+ax.tick_params(left=False, bottom=False)
+plt.show()
+
+aa = plt.figure(figsize = (12/50,4))
+ax = sns.heatmap(leidaArray[:,0,]/max(abs(leidaArray[:,0,])), 
+                 cmap = "RdBu_r", 
+                 vmin = -1, 
+                 vmax = 1, 
+                 square = False, 
+                 cbar = False)
+ax.axis('off')
+plt.show()
+```
+
+
+This document was prepared on `r format(Sys.Date())`. 
+
+
+# Package References
+
+```{r warning=FALSE, message=FALSE, results='asis'}
+report::cite_packages(sessionInfo())
+```
+
