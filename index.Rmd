@@ -1,6 +1,10 @@
 ---
 title: '**Dynamic Functional Connectivity**'
 subtitle: A tutorial
+author:
+  - Lucas G. S. França ^[King's College London, lucas.franca@kcl.ac.uk]
+  - Sunniva Fenn-Moltu ^[King's College London, sunniva.fenn-moltu@kcl.ac.uk]
+  - Dafnis Batalle ^[King's College London, dafnis.batalle@kcl.ac.uk]
 output:
   html_document:
     theme: cerulean
